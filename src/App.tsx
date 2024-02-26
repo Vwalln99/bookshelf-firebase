@@ -11,11 +11,17 @@ import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import { Button, Grid, Container } from '@mui/material';
 import {useAuthState} from "react-firebase-hooks/auth";
 import BookCard from './Books';
+import Form from './Form';
+import { TBook } from "./firebase/useBooks";
 
 
 function App() {
   const [open,setOpen] = useState (false);
+  const [_, setBookToEdit] = useState<TBook | null>(null);
   const [user] = useAuthState(auth);
+  const handleSetBookToEdit = (book: TBook | null) => {
+    setBookToEdit(book);
+  };
   const header = {
     height: "10vh",
     backgroundColor: "#fff",
@@ -80,6 +86,7 @@ function App() {
           </Grid>
         </Container>
       </main>
+      <Form open={open} handleClose={() => setOpen(false)}  bookToEdit={handleSetBookToEdit}/>
     </>
   );
 }

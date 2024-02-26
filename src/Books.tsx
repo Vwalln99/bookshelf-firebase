@@ -2,7 +2,9 @@ import { Grid, Paper, Typography, IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import  AddPhotoAlternateIcon  from "@mui/icons-material/AddPhotoAlternate";
-import useBooks from "./firebase/useBooks";
+import useBooks, { TBook } from "./firebase/useBooks";
+import { ChangeEvent } from "react";
+import { auth } from "./firebase/firebaseInit";
 
 const typoStyle = {
     pt: 2,
@@ -11,12 +13,14 @@ const typoStyle = {
 };
 
 export default function BookCard(){
-    const [books] = useBooks();
+    const [books, ,deleteBook, addImage, editBook] = useBooks();
     return(
         <>
         {
             books && 
-            books.map((book) => {
+            (books as TBook[])
+            .filter((book) =>book.uid === auth.currentUser?.uid)
+            .map((book) => {
                 return(
                     <Grid key={book.id} item xs={12} sm={6} md={4}>
                         <Paper
@@ -55,20 +59,25 @@ export default function BookCard(){
                                         type="file"
                                         accept="image/*"
                                         hidden
-                                        onChange={(e) => e.preventDefault()}
+                                        onChange={(e) => 
+                                            (addImage as (
+                                                e: ChangeEvent<HTMLInputElement>,
+                                                book:TBook
+                                            )=> void
+                                    )(e, book)}
                                     >
                                     </input>
                                     <AddPhotoAlternateIcon/>
                                 </IconButton>
                                 <IconButton 
                                 color="primary" component="button"
-                                onClick={(e) => e.preventDefault()}
+                                onClick={() => (deleteBook as (book:TBook) => void)(book)}
                                 >
                                     <DeleteIcon/>
                                 </IconButton>
                                 <IconButton 
                                 color="primary" component="button"
-                                onClick={(e) => e.preventDefault()}
+                                onClick={() => (editBook as (book:TBook)=> void)(book)}
                                 >
                                     <EditIcon/>
                                 </IconButton>
