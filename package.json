@@ -15,9 +15,10 @@
     "@fontsource/roboto": "^5.0.8",
     "@mui/icons-material": "^5.15.10",
     "@mui/material": "^5.15.10",
-    "firebase": "^10.8.0",
+    "firebase": "^10.6.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-firebase-hooks": "^5.1.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.56",
