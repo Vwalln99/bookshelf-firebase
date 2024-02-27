@@ -21,15 +21,17 @@ import {
   export default function Form({ open, handleClose, bookToEdit }: Props) {
     const [, addBook, editBook] = useBooks();
     const [formData, setFormData] = useState<TBook | null>({title: '', author: '', pages: 0, read: false});
+    const [_,setOpen] = useState (false);
   
     useEffect(() => {
-        if (open&&formData !== null) {
-          bookToEdit(formData); 
+        if (open && bookToEdit !== null) {
+          
+          setOpen(true);
         }
-      }, [open,formData,bookToEdit]);
+      }, [open,bookToEdit]);
   
     const handleFormSubmit = () => {
-      console.log(formData?.id);
+      console.log(open);
       if (formData?.id) {
         console.log("hello from if", formData);
         (editBook as (formdata: TBook)=>void)(formData);
