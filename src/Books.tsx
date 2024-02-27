@@ -14,6 +14,7 @@ const typoStyle = {
 
 export default function BookCard(){
     const [books, ,deleteBook, addImage, editBook] = useBooks();
+    
     return(
         <>
         {

@@ -20,18 +20,21 @@ import {
   
   export default function Form({ open, handleClose, bookToEdit }: Props) {
     const [, addBook, editBook] = useBooks();
-    const [formData, setFormData] = useState<TBook | null>(null);
+    const [formData, setFormData] = useState<TBook | null>({title: '', author: '', pages: 0, read: false});
   
     useEffect(() => {
-        if (formData) {
+        if (open&&formData !== null) {
           bookToEdit(formData); 
         }
-      }, [formData,bookToEdit]);
+      }, [open,formData,bookToEdit]);
   
     const handleFormSubmit = () => {
-      if (formData) {
+      console.log(formData?.id);
+      if (formData?.id) {
+        console.log("hello from if", formData);
         (editBook as (formdata: TBook)=>void)(formData);
       } else {
+        console.log('hello from else', formData, bookToEdit(formData));
         (addBook as (formdata: TBook)=>void)(formData!);
       }
       setFormData(null); 
@@ -40,7 +43,7 @@ import {
   
     return (
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>{formData ? "Edit Book" : "Add Book"}</DialogTitle>
+        <DialogTitle>{formData?.id ? "Edit Book" : "Add Book"}</DialogTitle>
         <DialogContent>
           <DialogContentText>
             {formData ? "Edit the book details" : "Add a book to your bookshelf!"}

@@ -19,12 +19,12 @@ import {
 } from "firebase/storage";
 
 export type TBook = {
-  id: string;
+  id?: string;
   title: string;
   author: string;
   pages: number;
   read: boolean;
-  createdAt: Date;
+  createdAt?: Date;
   imageUrl?: string;
   uid?: string;
   storageUrl?: string;
@@ -43,7 +43,8 @@ export default function useBooks() {
     });
   };
   const deleteBook = async (book: TBook) => {
-    await deleteDoc(doc(db, "books", book.id));
+    const bookRef = doc(db, "books", book.id!);
+    await deleteDoc(bookRef);
     if (book.imageUrl) {
       const imageRef = ref(storage, book.storageUrl);
       await deleteObject(imageRef);
@@ -51,7 +52,8 @@ export default function useBooks() {
   };
 
   const editBook = async (book: TBook) => {
-    const docRef = doc(db, "books", book.id);
+    console.log(book);
+    const docRef = doc(db, "books", book.id!);
     await updateDoc(docRef, book);
   };
   const addImage = async (
@@ -67,7 +69,7 @@ export default function useBooks() {
       const newImageRef = ref(storage, filepath);
       const upLoadTask = await uploadBytesResumable(newImageRef, file);
       const publicImgUrl = await getDownloadURL(upLoadTask.ref);
-      const docRef = doc(db, "books", book.id);
+      const docRef = doc(db, "books", book.id!);
       await setDoc(docRef, {
         ...book,
         imageURL: LOADING_IMAGE_URL,
