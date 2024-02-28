@@ -15,28 +15,31 @@ import {
   interface Props {
     open: boolean;
     handleClose: () => void;
-    bookToEdit: (book:TBook | null) => void; 
+    book: TBook | null;
   }
   
-  export default function Form({ open, handleClose, bookToEdit }: Props) {
-    const [, addBook, editBook] = useBooks();
-    const [formData, setFormData] = useState<TBook | null>({title: '', author: '', pages: 0, read: false});
-    const [_,setOpen] = useState (false);
-  
+  export default function Form({ open, handleClose, book}: Props) {
+    const [, addBook, , ,editBook] = useBooks();
+    const [formData, setFormData] = useState<TBook | null>(book);
+    const [isEditing, setIsEditing] = useState<boolean>(false);
+
     useEffect(() => {
-        if (open && bookToEdit !== null) {
-          
-          setOpen(true);
-        }
-      }, [open,bookToEdit]);
+       if(book?.id) {
+        setFormData(book);
+        setIsEditing(true);
+       }else{
+        setFormData({ title: '', author: '', pages: 0, read: false });
+        setIsEditing(false);
+       }
+      }, [book]);
   
     const handleFormSubmit = () => {
       console.log(open);
       if (formData?.id) {
         console.log("hello from if", formData);
-        (editBook as (formdata: TBook)=>void)(formData);
+        (editBook as (formData: TBook)=>void)(formData);
       } else {
-        console.log('hello from else', formData, bookToEdit(formData));
+        console.log('hello from else', formData);
         (addBook as (formdata: TBook)=>void)(formData!);
       }
       setFormData(null); 
@@ -45,10 +48,10 @@ import {
   
     return (
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>{formData?.id ? "Edit Book" : "Add Book"}</DialogTitle>
+        <DialogTitle>{isEditing ? "Edit Book" : "Add Book"}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {formData ? "Edit the book details" : "Add a book to your bookshelf!"}
+            {isEditing ? "Edit the book details" : "Add a book to your bookshelf!"}
           </DialogContentText>
           <TextField
             required
@@ -119,7 +122,7 @@ import {
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <Button onClick={handleFormSubmit}>
-            {formData ? "Save Changes" : "Add Book"}
+            {isEditing ? "Save Changes" : "Add Book"}
           </Button>
         </DialogActions>
       </Dialog>

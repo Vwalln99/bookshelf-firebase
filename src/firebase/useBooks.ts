@@ -43,6 +43,7 @@ export default function useBooks() {
     });
   };
   const deleteBook = async (book: TBook) => {
+    console.log("hello delete");
     const bookRef = doc(db, "books", book.id!);
     await deleteDoc(bookRef);
     if (book.imageUrl) {

@@ -17,10 +17,13 @@ import { TBook } from "./firebase/useBooks";
 
 function App() {
   const [open,setOpen] = useState (false);
-  const [_, setBookToEdit] = useState<TBook | null>(null);
+  const [bookToEdit, setBookToEdit] = useState<TBook | null>(null);
   const [user] = useAuthState(auth);
+  
+  
   const handleSetBookToEdit = (book: TBook | null) => {
     setBookToEdit(book);
+    setOpen(true);
   };
  
   const header = {
@@ -68,7 +71,7 @@ function App() {
             sx={{display:"flex", flexWrap:"wrap", mt:10, mb: 10}}
           >
             {user ? (
-              <BookCard/>
+              <BookCard bookToEdit={handleSetBookToEdit}/>
             ):(
               <div
                 style={{
@@ -87,7 +90,7 @@ function App() {
           </Grid>
         </Container>
       </main>
-      <Form open={open} handleClose={() => setOpen(false)}  bookToEdit={handleSetBookToEdit}/>
+      <Form open={open} handleClose={() => setOpen(false) } book={bookToEdit} />
     </>
   );
 }

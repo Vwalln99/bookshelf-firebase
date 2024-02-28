@@ -12,8 +12,12 @@ const typoStyle = {
     justifyContent: "space-between",
 };
 
-export default function BookCard(){
-    const [books, ,deleteBook, addImage, editBook] = useBooks();
+type Props = {
+    bookToEdit: (book: TBook) => void
+}
+
+export default function BookCard({bookToEdit}: Props){
+    const [books, ,deleteBook, addImage] = useBooks();
     
     return(
         <>
@@ -78,7 +82,7 @@ export default function BookCard(){
                                 </IconButton>
                                 <IconButton 
                                 color="primary" component="button"
-                                onClick={() => (editBook as (book:TBook)=> void)(book)}
+                                onClick={() => (bookToEdit as (book:TBook)=> void)(book)}
                                 >
                                     <EditIcon/>
                                 </IconButton>
